@@ -198,7 +198,14 @@ func main() {
 	http.HandleFunc("/shorten", service.shortenURLHandler)
 	http.HandleFunc("/", service.redirectHandler)
 
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	server := &http.Server{
+		Addr:         ":8080",
+		Handler:      nil,
+		ReadTimeout:  30 * time.Second,
+		WriteTimeout: 30 * time.Second,
+	}
+
+	if err := server.ListenAndServe(); err != nil {
 		log.Fatal("Failed to start server:", err)
 	}
 	fmt.Println("✅ Server started on :8080")
